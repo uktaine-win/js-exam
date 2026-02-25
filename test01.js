@@ -13,8 +13,21 @@ if (true) {
 }
 console.log(a, b, c);
 */
+/*
+10, 20, 30
+10, 2, 3
+*/ 
+// var a = 1;
+// let b = 2;
+// const c = 3;
 
-
+// if (true) {
+//   var a = 10;
+//   let b = 20;
+//   const c = 30;
+//   console.log(a, b, c);
+// }
+// console.log(a, b, c);
 
 /*
 Question 2: Array Destructuring
@@ -27,6 +40,9 @@ Assigns "Cherry" to a variable called third
 Assigns the rest ["Date", "Elderberry"] to a variable called remaining
 
 */
+const fruits = ["Apple", "Banana", "Cherry", "Date", "Elderberry"];
+let [first, , third, ...remaining] = fruits;
+// console.log( first, third, remaining);
 
 /*
 Question 3: Template Literals
@@ -35,12 +51,18 @@ Example: introduce("Alice", 30, "Developer") should return:
 "Hi, my name is Alice. I am 30 years old and I work as a Developer."
 
 */
-
+function introduce(obj) {
+  return `Hi, my name is ${obj.name}. I am ${obj.age} years old and I work as a ${obj.job}.`;
+}
+const obj = {
+  name: "Alice",
+  age: 30,
+  job: "Developer",
+}
+// console.log(introduce(obj));
 /*
 Question 4: Object Destructuring & Default Values
 Task: Given the following object:
-
-javascript
 const user = {
   name: "John",
   age: 25,
@@ -56,6 +78,16 @@ city (from the nested address object)
 phone with a default value of "N/A" (since it doesn't exist)
 Then log all three values.
 */
+const user = {
+  name: "John",
+  age: 25,
+  address: {
+    city: "New York",
+    country: "USA"
+  }
+};
+let {name,phone='N/A',address:{city}} = user;
+console.log(name, phone, city);
 
 /*
 Question 5: Promise.all
@@ -68,6 +100,23 @@ Logs an array of all three users' names
 Handles errors with try/catch
 Expected Output: ["Leanne Graham", "Ervin Howell", "Clementine Bauch"]
 */
+let url = "https://jsonplaceholder.typicode.com/users/";
+let ids = [1, 2, 3];
+async function fetchMultipleUsers(arr) {
+  try {
+    const responses = await Promise.all(arr.map(item => fetch(`${url}${item}`).then(res =>{
+      if(res.status === 200) return res.json();
+      else throw new Error(res.text())
+    })));
+       
+    const users = responses.map(it => it.name)
+    // console.log(users);
+  } catch (error) {
+    throw new Error(error)
+  }
+}
+fetchMultipleUsers(ids);
+
 
 /*
 Question 6: Higher-Order Functions
@@ -83,7 +132,16 @@ const triple = createMultiplier(3);
 console.log(double(5));  // 10
 console.log(triple(5));  // 15
 */
-
+function multiplier(m, n) {
+  return m * n;
+}
+function createMultiplier(n) {
+  return multiplier.bind(null, n)
+}
+const double = createMultiplier(2);
+const triple = createMultiplier(3);
+console.log(double(5));  // 10
+console.log(triple(5));  // 15
 /*
 Question 7: Debounce Function
 Task: Write a function called debounce that:
