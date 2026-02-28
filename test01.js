@@ -110,7 +110,7 @@ async function fetchMultipleUsers(arr) {
     })));
        
     const users = responses.map(it => it.name)
-    // console.log(users);
+    console.log(users); 
   } catch (error) {
     throw new Error(error)
   }
@@ -158,6 +158,21 @@ log(); // Timer resets
 log(); // Timer resets
 // After 1 second of no calls: "Executed!" is logged once
 */
+function debounce(fn, wait) {
+  let timer = null;
+  !timer && console.log("Timer starts");
+  return function(...args) {
+    timer && clearTimeout(timer);
+    timer && console.log("Timer resets");
+    timer = setTimeout(() => {
+      fn.apply(this, args)
+    }, wait)
+  }
+}
+const log = debounce(() => console.log("Executed!"), 1000);
+// log();
+// log();
+// log();
 
 /*
 Question 8: Flatten a Nested Array (Recursion)
@@ -169,6 +184,18 @@ flattenArray([1, [2, [3, [4]], 5], [6, 7]]);
 // Should return: [1, 2, 3, 4, 5, 6, 7]
 Hint: Use recursion!
 */
+function flattenArray(arr, acc = []) {
+  for(let item of arr) {
+    if(Array.isArray(item)) {
+      flattenArray(item, acc);
+    }else{
+      acc.push(item)
+    }
+  }
+  return acc
+}
+let nestArr = [[1, [2, [3, [4]], 5], [6, 7]]];
+// console.log(flattenArray(nestArr));
 
 /*
 Question 9: Custom Array.prototype.myMap()
@@ -188,6 +215,19 @@ const doubled = nums.myMap(function(el, i, arr) {
 });
 console.log(doubled); // [2, 4, 6]
 */
+Array.prototype.myMap = function(callback) {
+  let newArr = [];
+  for(let i = 0; i <this.length; i++ ) {
+    newArr.push(callback(this[i], i, this))
+  }
+  return newArr;
+}
+let nums = [1, 2, 3];
+const doubled = nums.myMap(function(el, i, arr) {
+  return el * 2;
+})
+console.log(doubled);
+
 
 /*
 Question 10: Event Loop & Microtasks
@@ -208,3 +248,4 @@ Promise.resolve().then(() => {
 
 console.log("5");
 */
+// 1, 3, 5, 4, 2
